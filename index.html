@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEO Automation Demo - marxvill</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e27;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .status {
+            background: #1a1f3a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .card {
+            background: #1a1f3a;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .metric {
+            font-size: 48px;
+            color: #667eea;
+            font-weight: bold;
+        }
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        .activity-log {
+            background: #0f1729;
+            padding: 20px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            padding: 10px;
+            margin: 5px 0;
+            background: #1a1f3a;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .question-card {
+            background: #0f1729;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #2d3561;
+        }
+        .question-card.active {
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+        #github-link {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="https://github.com/marxvill/geo-automation-demo" id="github-link">View on GitHub</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🚀 GEO Automation Dashboard</h1>
+            <p>Live demonstration of automated content generation for LLM optimization</p>
+            <p style="opacity: 0.8;">By marxvill | Educational Demo</p>
+        </div>
+
+        <div class="status">
+            <div class="status-dot"></div>
+            <div>
+                <strong>System Status:</strong> Active and Running
+                <br>
+                <small>Next auto-run: <span id="nextRun">Loading...</span></small>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📊 Automation Metrics</h2>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center;">
+                <div>
+                    <div class="metric" id="questionsCount">0</div>
+                    <div>Questions Found</div>
+                </div>
+                <div>
+                    <div class="metric" id="pagesCount">0</div>
+                    <div>Pages Generated</div>
+                </div>
+                <div>
+                    <div class="metric" id="citationsCount">0</div>
+                    <div>Citations Added</div>
+                </div>
+                <div>
+                    <div class="metric" id="hoursCount">0</div>
+                    <div>Hours Saved</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🎮 Manual Controls</h2>
+            <button class="button" onclick="runAutomation()">▶️ Run Automation Now</button>
+            <button class="button" onclick="viewGeneratedPages()">📄 View Generated Pages</button>
+            <button class="button" onclick="showSchedule()">📅 View Schedule</button>
+        </div>
+
+        <div class="card">
+            <h2>🔍 Live Question Harvesting</h2>
+            <div id="questionsGrid" class="questions-grid">
+                <!-- Questions will appear here -->
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📋 Activity Log</h2>
+            <div class="activity-log" id="activityLog">
+                <div class="log-entry">System initialized - Ready for automation</div>
+            </div>
+        </div>
+
+        <div class="card" style="background: #0f1729;">
+            <h2>🛠️ How This Works</h2>
+            <ol>
+                <li>GitHub Actions runs every 6 hours (or manually)</li>
+                <li>Harvests questions using legal APIs</li>
+                <li>Generates FAQ content automatically</li>
+                <li>Adds citations from reputable sources</li>
+                <li>Publishes to GitHub Pages</li>
+            </ol>
+            <p style="margin-top: 20px; opacity: 0.8;">
+                💡 This is an educational demonstration of GEO techniques. 
+                All content is auto-generated for learning purposes.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize dashboard
+        let stats = {
+            questions: parseInt(localStorage.getItem('questions') || 0),
+            pages: parseInt(localStorage.getItem('pages') || 0),
+            citations: parseInt(localStorage.getItem('citations') || 0),
+            hours: parseInt(localStorage.getItem('hours') || 0)
+        };
+
+        // Update display
+        function updateStats() {
+            document.getElementById('questionsCount').textContent = stats.questions;
+            document.getElementById('pagesCount').textContent = stats.pages;
+            document.getElementById('citationsCount').textContent = stats.citations;
+            document.getElementById('hoursCount').textContent = stats.hours;
+            
+            // Save to localStorage
+            localStorage.setItem('questions', stats.questions);
+            localStorage.setItem('pages', stats.pages);
+            localStorage.setItem('citations', stats.citations);
+            localStorage.setItem('hours', stats.hours);
+        }
+
+        // Add log entry
+        function addLog(message) {
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<strong>${time}:</strong> ${message}`;
+            
+            const log = document.getElementById('activityLog');
+            log.insertBefore(entry, log.firstChild);
+            
+            // Keep only last 10 entries
+            while (log.children.length > 10) {
+                log.removeChild(log.lastChild);
+            }
+        }
+
+        // Simulate automation
+        async function runAutomation() {
+            addLog('🚀 Starting automation cycle...');
+            
+            // Clear previous questions
+            document.getElementById('questionsGrid').innerHTML = '';
+            
+            // Simulate question harvesting
+            const questions = [
+                "What is AI medical scribing?",
+                "How much does medical scribe AI cost?",
+                "Is AI medical scribing HIPAA compliant?",
+                "AI scribe vs human medical scribe comparison",
+                "Best AI medical scribe software 2024",
+                "How to implement AI medical scribing"
+            ];
+            
+            for (let i = 0; i < questions.length; i++) {
+                await delay(500);
+                addQuestionCard(questions[i]);
+                stats.questions++;
+                updateStats();
+                addLog(`🔍 Found question: "${questions[i]}"`);
+            }
+            
+            await delay(1000);
+            addLog('📝 Generating FAQ content...');
+            
+            // Simulate page generation
+            for (let i = 0; i < questions.length; i++) {
+                await delay(300);
+                stats.pages++;
+                stats.citations += 3;
+                updateStats();
+            }
+            
+            stats.hours += 2;
+            updateStats();
+            
+            addLog('✅ Automation complete! Generated ' + questions.length + ' pages');
+        }
+
+        // Add question card
+        function addQuestionCard(question) {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `
+                <strong>${question}</strong>
+                <div style="margin-top: 10px; font-size: 12px; opacity: 0.7;">
+                    Status: Processing...
+                </div>
+            `;
+            document.getElementById('questionsGrid').appendChild(card);
+            
+            // Animate
+            setTimeout(() => {
+                card.classList.add('active');
+                setTimeout(() => {
+                    card.classList.remove('active');
+                    card.querySelector('div').textContent = 'Status: Complete ✓';
+                }, 2000);
+            }, 100);
+        }
+
+        // Utility functions
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function viewGeneratedPages() {
+            alert('Generated pages will appear in the /pages directory of your GitHub repository after the automation runs.');
+        }
+
+        function showSchedule() {
+            alert('Automation Schedule:\n\n' +
+                  '• Automatic runs: Every 6 hours\n' +
+                  '• Manual runs: Anytime via GitHub Actions\n' +
+                  '• Question harvesting: Each run\n' +
+                  '• Citation updates: Each run\n\n' +
+                  'View run history in GitHub Actions tab');
+        }
+
+        // Update next run time
+        function updateNextRun() {
+            const now = new Date();
+            const nextRun = new Date(now);
+            nextRun.setHours(Math.ceil(now.getHours() / 6) * 6, 0, 0);
+            if (nextRun <= now) {
+                nextRun.setHours(nextRun.getHours() + 6);
+            }
+            
+            const diff = nextRun - now;
+            const hours = Math.floor(diff / 3600000);
+            const minutes = Math.floor((diff % 3600000) / 60000);
+            
+            document.getElementById('nextRun').textContent = `in ${hours}h ${minutes}m`;
+        }
+
+        // Initialize
+        updateStats();
+        updateNextRun();
+        setInterval(updateNextRun, 60000); // Update every minute
+        
+        // Auto-run demo after 3 seconds
+        setTimeout(() => {
+            addLog('💡 Tip: Click "Run Automation Now" to see it in action!');
+        }, 3000);
+    </script>
+</body>
+</html>
